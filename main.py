@@ -1,5 +1,6 @@
 import pygame
 import pygame.draw
+from pygame.transform import scale
 
 from point import Point
 from constants import *
@@ -33,8 +34,8 @@ def setup(screen):
 
 def update(screen):
     screen.fill(COLOR_BACKGROUND)
-    draw_system_points(screen)
     draw_system_lines(screen)
+    draw_system_points(screen)
     draw_points(screen)
 
 
@@ -58,13 +59,15 @@ def draw_system_points(screen):
 
 def draw_system_lines(screen):
     for x in range(SYSTEM_WIDTH):
-        start = scale_pos((x, 0))
-        end = scale_pos((x, SYSTEM_HEIGHT - 1))
+        scaled_x = (x + 0.5) * GAP_WIDTH
+        start = scaled_x, 0
+        end = scaled_x, HEIGHT
         pygame.draw.line(screen, COLOR_LINE_NORMAL, start, end)
 
     for y in range(SYSTEM_HEIGHT):
-        start = scale_pos((0, y))
-        end = scale_pos((SYSTEM_WIDTH - 1, y))
+        scaled_y = (y + 0.5) * GAP_WIDTH
+        start = 0, scaled_y
+        end = WIDTH, scaled_y
         pygame.draw.line(screen, COLOR_LINE_NORMAL, start, end)
 
 
@@ -72,6 +75,7 @@ def scale_pos(pos):
     x, y = pos
     scaled_x = (x + 0.5) * GAP_WIDTH
     scaled_y = (SYSTEM_HEIGHT - (y + 0.5)) * GAP_HEIGHT
+    # (SYSTEM_HEIGHT * GAP_HEIGHT) - ((y + 0.5) * GAP_HEIGHT)
     scaled_pos = scaled_x, scaled_y
     return scaled_pos
 
