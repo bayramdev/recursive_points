@@ -33,7 +33,8 @@ def setup(screen):
 
 def update(screen):
     screen.fill(COLOR_BACKGROUND)
-    draw_system(screen)
+    draw_system_points(screen)
+    draw_system_lines(screen)
     draw_points(screen)
 
 
@@ -47,12 +48,24 @@ def draw_points(screen):
                        scaled_pos, POINT_RADIUS_SELECTED)
 
 
-def draw_system(screen):
+def draw_system_points(screen):
     for x in range(SYSTEM_WIDTH):
         for y in range(SYSTEM_HEIGHT):
             pos = scale_pos((x, y))
             pygame.draw.circle(screen, COLOR_POINT_NORMAL,
                                pos, POINT_RADIUS_NORMAL)
+
+
+def draw_system_lines(screen):
+    for x in range(SYSTEM_WIDTH):
+        start = scale_pos((x, 0))
+        end = scale_pos((x, SYSTEM_HEIGHT - 1))
+        pygame.draw.line(screen, COLOR_LINE_NORMAL, start, end)
+
+    for y in range(SYSTEM_HEIGHT):
+        start = scale_pos((0, y))
+        end = scale_pos((SYSTEM_WIDTH - 1, y))
+        pygame.draw.line(screen, COLOR_LINE_NORMAL, start, end)
 
 
 def scale_pos(pos):
