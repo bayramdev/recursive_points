@@ -8,6 +8,25 @@ from constants import *
 root_point = Point(ROOT_POINT_POSITION)
 
 
+def main():
+    pygame.init()
+    screen = pygame.display.set_mode(SIZE)
+    setup(screen)
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                on_mouse_button_down(event.pos, event.button)
+            elif event.type == pygame.MOUSEBUTTONUP:
+                on_mouse_button_up(event.pos, event.button)
+
+        update(screen)
+        pygame.display.flip()
+
+
 def setup(screen):
     pass
 
@@ -18,12 +37,8 @@ def update(screen):
     draw_points(screen)
 
 
-def on_mouse_button_down(pos, button):
-    pass
-
-
-def on_mouse_button_up(pos, button):
-    pass
+def on_mouse_button_down(pos, button): pass
+def on_mouse_button_up(pos, button): pass
 
 
 def draw_points(screen):
@@ -46,25 +61,6 @@ def scale_pos(pos):
     scaled_y = (SYSTEM_HEIGHT - (y + 0.5)) * GAP_HEIGHT
     scaled_pos = scaled_x, scaled_y
     return scaled_pos
-
-
-def main():
-    pygame.init()
-    screen = pygame.display.set_mode(SIZE)
-    setup(screen)
-
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                on_mouse_button_down(event.pos, event.button)
-            elif event.type == pygame.MOUSEBUTTONUP:
-                on_mouse_button_up(event.pos, event.button)
-
-        update(screen)
-        pygame.display.flip()
 
 
 main()
