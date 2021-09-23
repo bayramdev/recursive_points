@@ -1,6 +1,10 @@
+import os
+import sys
+
 import pygame
 import pygame.draw
-from pygame.transform import scale
+import pygame.display
+import pygame.image
 
 from point import Point
 from constants import *
@@ -11,8 +15,9 @@ root_point = Point(ROOT_POINT_POSITION)
 
 def main():
     pygame.init()
+    setup()
+
     screen = pygame.display.set_mode(SIZE)
-    setup(screen)
 
     running = True
     while running:
@@ -28,8 +33,11 @@ def main():
         pygame.display.flip()
 
 
-def setup(screen):
-    pass
+def setup():
+    icon_path = os.path.join(sys.path[0], WINDOW_ICON_RELATIVE_PATH)
+    icon = pygame.image.load(icon_path)
+    pygame.display.set_icon(icon)
+    pygame.display.set_caption(WINDOW_TITLE)
 
 
 def update(screen):
