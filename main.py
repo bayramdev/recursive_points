@@ -20,7 +20,7 @@ from constants import *
 root_point = Point(0, 0)
 
 
-child_generators = [
+child_functions = [
     lambda x, y: (x + 7, y),       # 7 up
     lambda x, y: (x - 13, y - 6),  # 13 left, 6 down
     lambda x, y: (x + 1, y + 8),   # right, 8 up
@@ -41,7 +41,7 @@ def main():
     pygame.init()
     init()
 
-    screen = pygame.display.set_mode(SIZE)
+    screen = pygame.display.set_mode(WINDOW_SIZE)
     setup(screen)
 
     running = True
@@ -68,88 +68,85 @@ def init():
 
 
 def setup(screen):
-    lookup_table = [[0 for _ in range(SYSTEM_WIDTH)]
-                    for _ in range(SYSTEM_HEIGHT)]
-    create_children(root_point, lookup_table)
-    screen.fill(COLOR_BACKGROUND)
-    draw_system_lines(screen)
-    draw_system_points(screen)
-    draw_points(screen)
+    lookup_table = [[0 for _ in range(AREA_WIDTH)] for _ in range(AREA_HEIGHT)]
+    init_child_points(root_point, lookup_table)
+
+    screen.fill(BACKGROUND_COLOR)
+    draw_grid_lines(screen)
+    draw_grid_points(screen)
+    draw_child_points(screen, root_point)
+    draw_root_point(screen)
 
 
 def update(screen):
     pass
 
 
-def on_mouse_button_down(pos, button):
+def on_mouse_button_down(position, button):
     pass
 
 
-def on_mouse_button_up(pos, button):
+def on_mouse_button_up(position, button):
     pass
+
+
+# DRAW HELPERS
+
+def draw_root_point(screen):
+    scaled_pos = scale_position(root_point.x, root_point.y)
+    pygame.draw.circle(screen, ROOT_POINT_COLOR, scaled_pos, POINT_RADIUS)
+
+
+def draw_child_points(screen, point):
+    scaled_pos = scale_position(point.x, point.y)
+    pygame.draw.circle(screen, CHILD_POINT_COLOR, scaled_pos, POINT_RADIUS)
+
+    for child in point.children:
+        draw_child_points(screen, child)
+
+
+def draw_grid_points(screen):
+    for x in range(AREA_WIDTH):
+        for y in range(AREA_HEIGHT):
+            pos = scale_position(x, y)
+            pygame.draw.circle(screen, GRID_POINT_COLOR, pos, POINT_RADIUS)
+
+
+def draw_grid_lines(screen):
+    for x in range(AREA_WIDTH):
+        start = scale_position(x, 0)
+        end = scale_position(x, AREA_WIDTH - 1)
+        pygame.draw.line(screen, GRID_LINE_COLOR, start, end)
+
+    for y in range(AREA_HEIGHT):
+        start = scale_position(0, y)
+        end = scale_position(AREA_WIDTH - 1, y)
+        pygame.draw.line(screen, GRID_LINE_COLOR, start, end)
 
 
 # UTILS
 
-def draw_points(screen):
-    draw_children(screen, root_point)
-
-    scaled_pos = scale_pos(root_point.x, root_point.y)
-    pygame.draw.circle(screen, COLOR_POINT_SELECTED,
-                       scaled_pos, POINT_RADIUS_SELECTED)
-
-
-def draw_children(screen, point):
-    scaled_pos = scale_pos(point.x, point.y)
-    pygame.draw.circle(screen, COLOR_POINT_SELECTED,
-                       scaled_pos, POINT_RADIUS_NORMAL)
-
-    for child in point.children:
-        draw_children(screen, child)
-
-
-def draw_system_points(screen):
-    for x in range(SYSTEM_WIDTH):
-        for y in range(SYSTEM_HEIGHT):
-            pos = scale_pos(x, y)
-            pygame.draw.circle(screen, COLOR_POINT_NORMAL,
-                               pos, POINT_RADIUS_NORMAL)
-
-
-def draw_system_lines(screen):
-    for x in range(SYSTEM_WIDTH):
-        start = scale_pos(x, 0)
-        end = scale_pos(x, SYSTEM_HEIGHT - 1)
-        pygame.draw.line(screen, COLOR_LINE_NORMAL, start, end)
-
-    for y in range(SYSTEM_HEIGHT):
-        start = scale_pos(0, y)
-        end = scale_pos(SYSTEM_WIDTH - 1, y)
-        pygame.draw.line(screen, COLOR_LINE_NORMAL, start, end)
-
-
-def scale_pos(x, y):
+def scale_position(x, y):
     scaled_x = (x + 0.5) * GAP_WIDTH
-    scaled_y = (SYSTEM_HEIGHT - (y + 0.5)) * GAP_HEIGHT
+    scaled_y = (AREA_HEIGHT - (y + 0.5)) * GAP_HEIGHT
     return scaled_x, scaled_y
 
 
-def create_children(point: Point, lookup_table):
-    for child_generator in child_generators:
+def init_child_points(point: Point, lookup_table):
+    for child_generator in child_functions:
         child = Point(child_generator(point.x, point.y))
         x, y = int(child.x), int(child.y)
 
-        # TODO: Take into account the ones that return from outer space
         if is_in_boundry(x, y) and not lookup_table[y][x]:
             lookup_table[y][x] = 1
-            create_children(child, lookup_table)
+            init_child_points(child, lookup_table)
             point.children.append(child)
 
 
 def is_in_boundry(x, y) -> bool:
-    return 0 <= x < SYSTEM_WIDTH and 0 <= y < SYSTEM_HEIGHT
+    return 0 <= x < AREA_WIDTH and 0 <= y < AREA_HEIGHT
 
 
-# FUNCTION CALL
+# EXECUTION
 
 main()

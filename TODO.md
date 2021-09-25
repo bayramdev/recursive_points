@@ -1,6 +1,5 @@
 ## TODO
 
-- Refactor variable names and comments
 - Add type hinting for function arguments
 - Limit FPS to 60
 - Take into account the grandchildren that return from outer space
