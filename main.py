@@ -12,6 +12,7 @@ import pygame.display
 import pygame.draw
 import pygame.event
 import pygame.image
+import pygame.time
 from pygame.surface import Surface
 
 from point import Point
@@ -53,6 +54,8 @@ def main():
     screen = pygame.display.set_mode(WINDOW_SIZE)
     setup(screen)
 
+    clock = pygame.time.Clock()
+
     running = True
     while running:
         for event in pygame.event.get():
@@ -65,6 +68,8 @@ def main():
 
         update(screen)
         pygame.display.flip()
+
+        clock.tick(FPS)
 
 
 # EVENTS

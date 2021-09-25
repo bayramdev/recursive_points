@@ -1,6 +1,5 @@
 ## TODO
 
-- Limit FPS to 60
 - Take into account the grandchildren that return from outer space
 - Solve data duplication between lookup table and child nodes
 - Divide code to smaller files

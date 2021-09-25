@@ -1,3 +1,8 @@
+# Runtime
+
+FPS = 30
+
+
 # Colors
 
 BACKGROUND_COLOR = 35, 39, 46
