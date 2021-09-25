@@ -17,7 +17,7 @@ from constants import *
 
 # GLOBALS
 
-root_point = Point(ROOT_POINT_POSITION)
+root_point = Point(0, 0)
 
 child_generators = [
     lambda x, y: (x + 7, y),
