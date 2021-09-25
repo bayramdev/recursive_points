@@ -20,9 +20,17 @@ from constants import *
 root_point = Point(0, 0)
 
 child_generators = [
-    lambda x, y: (x + 7, y),
-    lambda x, y: (x - 13, y),
-    lambda x, y: (x + 1, y + 8),
+    lambda x, y: (x + 7, y),       # 7 up
+    lambda x, y: (x - 13, y - 6),  # 13 left, 6 down
+    lambda x, y: (x + 1, y + 8),   # right, 8 up
+    # lambda x, y: (x, y + 1),       # up
+    # lambda x, y: (x, y - 1),       # down
+    # lambda x, y: (x + 1, y),       # right
+    # lambda x, y: (x - 1, y),       # left
+    # lambda x, y: (x + 1, y + 1),   # right up
+    # lambda x, y: (x + 1, y - 1),   # right down
+    # lambda x, y: (x - 1, y - 1),   # left down
+    # lambda x, y: (x - 1, y + 1),   # left up
 ]
 
 
