@@ -7,4 +7,6 @@
 - Get root node position and area size from user
 - Animate child point creation with arrows
 - Create a reverse scale_position function
-- Add new items to this file
+- Output the highlighted point count to user
+
+- Add new todo items to this file
