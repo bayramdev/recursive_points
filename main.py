@@ -70,14 +70,14 @@ def setup(screen):
     lookup_table = [[0 for _ in range(SYSTEM_WIDTH)]
                     for _ in range(SYSTEM_HEIGHT)]
     create_children(root_point, lookup_table)
-
-
-def update(screen):
     screen.fill(COLOR_BACKGROUND)
     draw_system_lines(screen)
     draw_system_points(screen)
-    # TODO: Animate creation of new child points
     draw_points(screen)
+
+
+def update(screen):
+    pass
 
 
 def on_mouse_button_down(pos, button):
