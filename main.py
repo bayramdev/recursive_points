@@ -61,10 +61,6 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                on_mouse_button_down(event.pos, event.button)
-            elif event.type == pygame.MOUSEBUTTONUP:
-                on_mouse_button_up(event.pos, event.button)
 
         update(screen)
         pygame.display.flip()
@@ -93,14 +89,6 @@ def setup(screen: Surface):
 
 
 def update(screen: Surface):
-    pass
-
-
-def on_mouse_button_down(position: OrderedPair, button: int):
-    pass
-
-
-def on_mouse_button_up(position: OrderedPair, button: int):
     pass
 
 
