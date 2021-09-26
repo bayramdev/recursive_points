@@ -30,4 +30,4 @@ POINT_RADIUS = max(1, GAP_MIN / 16)
 # Window
 
 WINDOW_ICON_RELATIVE_PATH = "assets/icon.png"
-WINDOW_TITLE = "Linked Vectors"
+WINDOW_TITLE = "Recursive points"
