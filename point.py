@@ -77,7 +77,7 @@ class RootPoint(Point):
     def _validate(self, other: Point):
         if self.includes(other):
             return ValidationResult.Duplicate
-        elif 0 <= other.x < 16 and 0 <= other.y < 16:
+        elif 0 <= other.x < self.area_width and 0 <= other.y < self.area_height:
             return ValidationResult.Unique
         else:
             return ValidationResult.OutOfBoundry
