@@ -5,7 +5,7 @@
 
 import os
 import sys
-from typing import List, Tuple
+from typing import Iterable, List, Tuple
 
 import pygame
 import pygame.display
@@ -15,24 +15,17 @@ import pygame.image
 import pygame.time
 from pygame.surface import Surface
 
-from point import Point
+from point import Point, RootPoint
 from constants import *
 
-
-# TYPES
-
-OrderedPair = Tuple[int, int]
-AreaMatrix = List[List[int]]
+sys.setrecursionlimit(8192)
 
 
 # GLOBALS
 
-root_point = Point(0, 0)
-
-
-child_functions = [
+root_point = RootPoint(0, 0, [
     lambda x, y: (x + 7, y),       # 7 up
-    lambda x, y: (x - 13, y - 6),  # 13 left, 6 down
+    # lambda x, y: (x - 13, y - 6),  # 13 left, 6 down
     lambda x, y: (x + 1, y + 8),   # right, 8 up
     # lambda x, y: (x, y + 1),       # up
     # lambda x, y: (x, y - 1),       # down
@@ -42,12 +35,14 @@ child_functions = [
     # lambda x, y: (x + 1, y - 1),   # right down
     # lambda x, y: (x - 1, y - 1),   # left down
     # lambda x, y: (x - 1, y + 1),   # left up
-]
+], AREA_WIDTH, AREA_HEIGHT)
 
 
 # MAIN
 
 def main():
+    print(root_point)
+
     pygame.init()
     init()
 
@@ -62,7 +57,6 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
 
-        update(screen)
         pygame.display.flip()
 
         clock.tick(FPS)
@@ -78,14 +72,10 @@ def init():
 
 
 def setup(screen: Surface):
-    lookup_table = [[0 for _ in range(AREA_WIDTH)] for _ in range(AREA_HEIGHT)]
-    init_child_points(root_point, lookup_table)
-
     screen.fill(BACKGROUND_COLOR)
     draw_grid_lines(screen)
     draw_grid_points(screen)
-    draw_child_points(screen, root_point)
-    draw_root_point(screen)
+    draw_marked_points(screen, root_point)
 
 
 def update(screen: Surface):
@@ -94,17 +84,13 @@ def update(screen: Surface):
 
 # DRAW HELPERS
 
-def draw_root_point(screen: Surface):
-    scaled_pos = scale_position(root_point.x, root_point.y)
-    pygame.draw.circle(screen, ROOT_POINT_COLOR, scaled_pos, POINT_RADIUS)
-
-
-def draw_child_points(screen: Surface, point: Point):
-    scaled_pos = scale_position(point.x, point.y)
-    pygame.draw.circle(screen, CHILD_POINT_COLOR, scaled_pos, POINT_RADIUS)
+def draw_marked_points(screen: Surface, point: Point):
+    if 0 <= point.x < AREA_WIDTH and 0 <= point.y < AREA_HEIGHT:
+        scaled_pos = scale_position(point.x, point.y)
+        pygame.draw.circle(screen, ROOT_POINT_COLOR, scaled_pos, POINT_RADIUS)
 
     for child in point.children:
-        draw_child_points(screen, child)
+        draw_marked_points(screen, child)
 
 
 def draw_grid_points(screen: Surface):
@@ -128,21 +114,10 @@ def draw_grid_lines(screen: Surface):
 
 # UTILS
 
-def scale_position(x: int, y: int) -> OrderedPair:
+def scale_position(x: int, y: int) -> Tuple[int, int]:
     scaled_x = (x + 0.5) * GAP_WIDTH
     scaled_y = (AREA_HEIGHT - (y + 0.5)) * GAP_HEIGHT
     return scaled_x, scaled_y
-
-
-def init_child_points(point: Point, lookup_table: AreaMatrix):
-    for child_generator in child_functions:
-        child = Point(child_generator(point.x, point.y))
-        x, y = int(child.x), int(child.y)
-
-        if is_in_boundry(x, y) and not lookup_table[y][x]:
-            lookup_table[y][x] = 1
-            init_child_points(child, lookup_table)
-            point.children.append(child)
 
 
 def is_in_boundry(x: int, y: int) -> bool:
